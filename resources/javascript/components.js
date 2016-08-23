@@ -40,6 +40,7 @@ class Person extends React.Component {
         super();
         this.state = {
             clicked: false,
+            totalDebt: 0,
             list: []
         };
     }
@@ -55,17 +56,14 @@ class Person extends React.Component {
                 <div>
                     <button onClick={this._handleClick.bind(this) }>{this.props.name}</button>
                     <form className="pressure-form" onSubmit={this._handleSubmit.bind(this) }>
-                        <label>Take Your Money Back!</label>
-                        <div className="pressure-form-fields">
-                            {this.state.list}
-                            <select class="ui dropdown" ref={value => this._to = value} >
-                                {arr}
-                            </select>
-
-                            <div class="ui input">
-                                <input type="text" placeholder="money..." ref={(input) => this._amount = input}/>
-                            </div>
-
+                        <p>total: {totalDebt}</p>
+                        {this.state.list}
+                        <select class="ui dropdown" ref={value => this._to = value} >
+                            <p>\nGive money to</p>
+                            {arr}
+                        </select>
+                        <div class="ui input">
+                            <input type="text" placeholder="money..." ref={(input) => this._amount = input}/>
                         </div>
                         <div className="pressure-form-actions">
                             <button type="submit">
@@ -96,6 +94,10 @@ class Person extends React.Component {
         ref.update({
             [_to]: _amount
         });
+        ref = new Firebase("https://givememymoney-d0e42.firebaseio.com/" + _to);
+        ref.update({
+            [_from]: _amount
+        });
     }
     _handleClick() {
         this.setState({
@@ -104,16 +106,27 @@ class Person extends React.Component {
     }
 
     _fetchIndividualList() {
-        //var arr = Object.keys(snapshot.val()).map(function (_) { return (snapshot.val()[_]) });
-
         let listRef = new Firebase("https://givememymoney-d0e42.firebaseio.com/" + this.props.name);
         listRef.on('value', function (snapshot) {
             if (snapshot.val() != null) {
-                //this.setState({ list: Object.keys(snapshot.val()).map(arg => { return { key: arg, val: snapshot.val()[arg] } }) });
-                this.setState({ list: Object.keys(snapshot.val()).map(arg => { return <div><p>name: {arg}</p><p>debt: {snapshot.val()[arg]}</p></div> }) });
+                let data = snapshot.val();
+                let keys = Object.keys(data);
+                this.setState({
+                    list: keys.map(
+                        arg => { return <div><p>name: {arg}, debt: {data[arg]}</p></div> }),
+                    totalDebt: _sumDebt(keys)
+                });
 
             }
         }.bind(this));
+    }
+
+    _sumDebt(arr) {
+        let result = 0;
+        for (key in arr) {
+            result += arr[key];
+        }
+        return result;
     }
 }
 
