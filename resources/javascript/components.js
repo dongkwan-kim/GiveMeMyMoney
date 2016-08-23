@@ -56,16 +56,14 @@ class Person extends React.Component {
                 <div>
                     <button onClick={this._handleClick.bind(this) }>{this.props.name}</button>
                     <form className="pressure-form" onSubmit={this._handleSubmit.bind(this) }>
-                        <p>total: {totalDebt}</p>
+                        <p>total: {this.state.totalDebt}</p>
                         {this.state.list}
-                        <select class="ui dropdown" ref={value => this._to = value} >
+                        <select className="ui dropdown" ref={value => this._to = value} >
                             <p>\nGive money to</p>
                             {arr}
                         </select>
                         <div class="ui input">
-                            <input type="text" placeholder="money..." ref={(input) => this._amount = input}/>
-                        </div>
-                        <div className="pressure-form-actions">
+                            <input className="ui input" type="text" placeholder="money..." ref={(input) => this._amount = input}/>
                             <button type="submit">
                                 Ask for my Money
                             </button>
@@ -105,29 +103,30 @@ class Person extends React.Component {
         });
     }
 
+
+
     _fetchIndividualList() {
         let listRef = new Firebase("https://givememymoney-d0e42.firebaseio.com/" + this.props.name);
         listRef.on('value', function (snapshot) {
             if (snapshot.val() != null) {
                 let data = snapshot.val();
                 let keys = Object.keys(data);
+                let debt = 0;
+                for (var key in data) {
+                    debt += Number(data[key]);
+                }
+
                 this.setState({
                     list: keys.map(
                         arg => { return <div><p>name: {arg}, debt: {data[arg]}</p></div> }),
-                    totalDebt: _sumDebt(keys)
+                    totalDebt: debt
                 });
 
             }
         }.bind(this));
     }
 
-    _sumDebt(arr) {
-        let result = 0;
-        for (key in arr) {
-            result += arr[key];
-        }
-        return result;
-    }
+
 }
 
 ReactDOM.render(
