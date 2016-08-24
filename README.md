@@ -1,1 +1,1 @@
-Mady by juhojuho.
+Made by juhojuho.
