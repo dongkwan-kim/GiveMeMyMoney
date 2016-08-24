@@ -51,22 +51,23 @@ class Person extends React.Component {
 
     render() {
         if (this.state.clicked) {
-            let arr = this.props.nameList.map(arg => { return <option value={arg}>{arg}</option> });
+            let arr = this.props.nameList.map((arg, index) => { return (<option value={index}>{arg}</option>) });
             return (
                 <div>
-                    <button onClick={this._handleClick.bind(this) }>{this.props.name}</button>
-                    <form className="pressure-form" onSubmit={this._handleSubmit.bind(this) }>
-                        <p>total: {this.state.totalDebt}</p>
+                    <button className="ui primary button container" onClick={this._handleClick.bind(this) }>{this.props.name}</button>
+                    <div className="ui segment">
                         {this.state.list}
+                    </div>
+                    <form className="pressure-form" onSubmit={this._handleSubmit.bind(this) }>
                         <select className="ui dropdown" ref={value => this._to = value} >
-                            <p>\nGive money to</p>
+                            <option value="">Name</option>
                             {arr}
                         </select>
-                        <div class="ui input">
-                            <input className="ui input" type="text" placeholder="money..." ref={(input) => this._amount = input}/>
-                            <button type="submit">
-                                Ask for my Money
-                            </button>
+                        <div className="ui action input">
+                            <input type="text" placeholder="money..." ref={(input) => this._amount = input}/>
+                            <div className="ui button" type="submit">
+                                Send
+                            </div>
                         </div>
                     </form>
 
@@ -77,7 +78,7 @@ class Person extends React.Component {
         else
             return (
                 <div>
-                    <button onClick={this._handleClick.bind(this) }>{this.props.name}</button>
+                    <button className="ui basic button container" onClick={this._handleClick.bind(this) }>{this.props.name}</button>
 
                 </div>
             );
@@ -103,6 +104,20 @@ class Person extends React.Component {
         });
     }
 
+    _handleDeleteClick() {
+        let _from = this.props.name;
+        let _to = this._to.value;
+        let _amount = this._amount.value;
+        let ref = new Firebase("https://givememymoney-d0e42.firebaseio.com/" + _from);
+        ref.update({
+            [_to]: 0
+        });
+        ref = new Firebase("https://givememymoney-d0e42.firebaseio.com/" + _to);
+        ref.update({
+            [_from]: 0
+        });
+    }
+
 
 
     _fetchIndividualList() {
@@ -118,7 +133,14 @@ class Person extends React.Component {
 
                 this.setState({
                     list: keys.map(
-                        arg => { return <div><p>name: {arg}, debt: {data[arg]}</p></div> }),
+                        arg => {
+                            return (
+                                <div className="ui segment">
+                                    <i className="large remove circle icon"></i>
+                                    <div classname="content">
+                                        name: {arg}, debt: {data[arg]}</div>
+                                </div>
+                                )}),
                     totalDebt: debt
                 });
 
