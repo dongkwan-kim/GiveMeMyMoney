@@ -55,10 +55,10 @@ class Person extends React.Component {
             return (
                 <div>
                     <button className="ui primary button container" onClick={this._handleClick.bind(this) }>{this.props.name}</button>
-                    <div className="ui segment">
+                    <div className="ui segment container">
                         {this.state.list}
                     </div>
-                    <form className="pressure-form" onSubmit={this._handleSubmit.bind(this) }>
+                    <form className="pressure-form" style="text-align: center;" onSubmit={this._handleSubmit.bind(this) }>
                         <select className="ui dropdown" ref={value => this._to = value} >
                             <option value="">Name</option>
                             {arr}
