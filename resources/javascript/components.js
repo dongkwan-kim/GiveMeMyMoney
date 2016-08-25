@@ -52,13 +52,14 @@ class Person extends React.Component {
     render() {
         if (this.state.clicked) {
             let arr = this.props.nameList.map((arg, index) => { return (<option value={index}>{arg}</option>) });
+            var pressure_form_style = {textAlign: "center"};
             return (
                 <div>
                     <button className="ui primary button container" onClick={this._handleClick.bind(this) }>{this.props.name}</button>
                     <div className="ui segment container">
                         {this.state.list}
                     </div>
-                    <form className="pressure-form" style={textAlign: 'center'} onSubmit={this._handleSubmit.bind(this) }>
+                    <form className="pressure-form" style={pressure_form_style} onSubmit={this._handleSubmit.bind(this) }>
                         <select className="ui dropdown" ref={value => this._to = value} >
                             <option value="">Name</option>
                             {arr}
