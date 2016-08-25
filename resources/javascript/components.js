@@ -138,8 +138,9 @@ class Person extends React.Component {
                             return (
                                 <div className="ui segment">
                                     <i className="large remove circle icon"></i>
-                                    <div classname="content">
-                                        name: {arg}, debt: {data[arg]}</div>
+                                    <span classname="content">
+                                        name: {arg}, debt: {data[arg]}
+                                    </span>
                                 </div>
                                 )}),
                     totalDebt: debt
