@@ -58,7 +58,7 @@ class Person extends React.Component {
                     <div className="ui segment container">
                         {this.state.list}
                     </div>
-                    <form className="pressure-form" style="text-align: center;" onSubmit={this._handleSubmit.bind(this) }>
+                    <form className="pressure-form" style={textAlign: 'center'} onSubmit={this._handleSubmit.bind(this) }>
                         <select className="ui dropdown" ref={value => this._to = value} >
                             <option value="">Name</option>
                             {arr}
